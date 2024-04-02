@@ -1,0 +1,6 @@
+@PandemiconiumAPI_HostAddress = http://localhost:5117
+
+GET {{PandemiconiumAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
