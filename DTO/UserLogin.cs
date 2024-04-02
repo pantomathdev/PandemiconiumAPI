@@ -1,11 +1,9 @@
 ﻿namespace PandemiconiumAPI.DTO
 {
-	public class UserToLoginDto
+	public sealed class UserToLoginDto
 	{
 		public string email { get; set; } = string.Empty;
 		public string password { get; set; } = string.Empty;
 	}
-	public class UserLogin
-	{
-	}
 }
+//Made UserToLoginDto class as sealed, because there is no potential of extension or inheritence for this class.

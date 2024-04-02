@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using PandemiconiumAPI.DTO;
+using PandemiconiumAPI;
 using System.Collections;
 using MailKit;
 using MimeKit;
@@ -16,7 +17,7 @@ using System.Text;
 using Org.BouncyCastle.Security;
 
 var builder = WebApplication.CreateBuilder(args);
-
+JWTmanager jwtManager = new(builder.Configuration);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -136,7 +137,11 @@ app.MapPost("/LogIn", async (UserToLoginDto user) =>
 				if (passwordHash[i] != loginUser.password_hash[i])
 					return Results.BadRequest("Invalid credentials.");
 			}
-			return Results.Ok(loginUser.iduser);
+			long userId = connection.ExecuteScalar<long>("SELECT iduser FROM user WHERE email = @email", new {email = user.email});
+			return Results.Ok(new Dictionary<string, string>
+			{
+				{"token", jwtManager.CreateToken(userId) }
+			});
 		}
 		return Results.BadRequest("Invalid credentials.");
 	}
